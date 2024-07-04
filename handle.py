@@ -21,7 +21,7 @@ def handle(message):
 			temp = cursor.fetchone()
 		if temp == None:
 			with lock:
-				cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, 0, 0, 0, 0, 0, 0, False, False, False, 0, 0))
+				cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins1, wins2, wins3, wins4, wins5, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, 0, 0, 0, 0, 0, 0, False, False, False, 0, 0))
 		with lock:
 			cursor.execute("SELECT count FROM balance WHERE user_id=?", (message.chat.id,))
 			count = cursor.fetchone()

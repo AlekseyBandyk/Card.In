@@ -1,7 +1,8 @@
 import telebot
 from telebot import types
 import threading
-from create_bot import bot, cursor, lock
+from menu import menu
+from create_bot import bot, cursor, lock, con
 
 @bot.message_handler(commands=['quests'])
 def quest(message):
@@ -12,7 +13,7 @@ def quest(message):
 				temp = cursor.fetchone()
 			temp = temp[0]
 			with lock:
-				cursor.execute("SELECT wins FROM balance WHERE user_id=?", (message.chat.id,))
+				cursor.execute("SELECT wins1 FROM balance WHERE user_id=?", (message.chat.id,))
 				temp_wins = cursor.fetchone()
 			temp_wins = temp_wins[0]
 			with lock:

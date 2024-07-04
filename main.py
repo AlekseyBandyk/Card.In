@@ -58,4 +58,14 @@ minigames.register_handlers(bot)
 profile.register_handlers(bot)
 handle.register_handlers(bot)
 
-bot.polling(none_stop=True)
+def polling_bot():
+	try:
+		bot.polling(none_stop=True)
+	except Exception as e:
+		i+=1
+		bot.send_message(5493548156, "Bot has been stoped with error: "+e+", but he been restarted. Restart №"+str(i))
+		polling_bot()
+
+if __name__ == '__main__':
+	i=0
+	polling_bot()

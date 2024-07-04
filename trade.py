@@ -3,6 +3,7 @@ from telebot import types
 import config
 import datetime
 import threading
+from menu import menu
 from create_bot import bot, cursor, cursor1, lock, con, con1
 
 def shop(message):
