@@ -10,7 +10,8 @@ def menu(message):
 	but_for_quests = types.KeyboardButton("Квесты")
 	but_for_trade = types.KeyboardButton("Торговая площадка")
 	but_for_ask = types.KeyboardButton("Обратная связь")
-	menu_keyboard.add(but_for_click, but_for_profile, but_for_mg, but_for_quests, but_for_trade, but_for_ask)
+	but_for_bank = types.KeyboardButton("Банк")
+	menu_keyboard.add(but_for_click, but_for_profile, but_for_mg, but_for_quests, but_for_trade, but_for_ask, but_for_bank)
 	bot.send_message(message.chat.id, "Меню", reply_markup=menu_keyboard)
 
 def register_handlers(bot: telebot.TeleBot):

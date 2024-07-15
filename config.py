@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import random
 
-token = "7366838775:AAHsjtZlYrIpA_V6ML3eg52B4W4SyluCAdY"
+token = "7366838775:AAGwq_DXSn_DswLnqKj6d_waMs5DF-52yZI"
 owner = -1002239660093
 
 default_cards = ["Кирпичный завод", "Завод ткани", "Ферма", "Оружейный завод", "Завод телефонов",]
@@ -141,6 +141,8 @@ true_words = [
 	"час",
 	"гора"
 ] #game3
+
+letters_for_bank = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 def get_card(path, name):
 	temp = path[name]

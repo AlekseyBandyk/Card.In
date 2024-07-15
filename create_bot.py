@@ -13,6 +13,8 @@ con = sqlite3.connect("balance.db", check_same_thread=False)
 cursor = con.cursor()
 con1 = sqlite3.connect("trade.db", check_same_thread=False)
 cursor1 = con1.cursor()
+con2 = sqlite3.connect("checks.db", check_same_thread=False)
+cur2 = con2.cursor()
 clicks_for_all = 1
 
 bot = telebot.TeleBot(config.token)

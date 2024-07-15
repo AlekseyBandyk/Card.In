@@ -4,7 +4,9 @@ con = sqlite3.connect("balance.db")
 cursor = con.cursor()
 con1 = sqlite3.connect("trade.db")
 cursor1 = con1.cursor()
-choice = input("1. Только основу, 2. Только площадку, 3. Обе")
+con2 = sqlite3.connect("checks.db", check_same_thread=False)
+cur2 = con2.cursor()
+choice = input("1. Только основу, 2. Только площадку, 3. Обе, 4. Чеки")
 choice = int(choice)
 
 if choice == 1:
@@ -46,7 +48,11 @@ elif choice == 3:
                 rare_card str,
                 epic_card str,
                 legendary_card str,
-                wins int,
+                wins1 int,
+                wins2 int,
+                wins3 int,
+                wins4 int,
+                wins5 int,
                 quest1 boolean,
                 quest2 boolean,
                 quest3 boolean,
@@ -61,4 +67,11 @@ elif choice == 3:
                 product_date str)
             """)
 
+elif choice == 4:
+    cur2.execute("""CREATE TABLE checks
+                (user_id long,
+                check_id str,
+                clicks long)
+            """)
+            
 print("DONE!!!!!!!!!")

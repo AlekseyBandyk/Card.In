@@ -13,6 +13,7 @@ import quests
 import start
 import trade
 import minigames
+import bank
 
 def handle(message):
 	if message.text == 'Click!':
@@ -39,6 +40,9 @@ def handle(message):
 
 	elif message.text == 'Кликать':
 		click.click(message)
+
+	elif message.text == "Банк":
+		bank.bank(message)
 
 	elif message.text == 'Мини-игры':
 		minigames.minigames(message)
