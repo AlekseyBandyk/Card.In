@@ -4,7 +4,7 @@ import config
 import datetime
 import threading
 from menu import menu
-from create_bot import bot, cursor, cursor1, lock, con, con1
+from create_bot import bot, cursor, cursor1, lock, con, con1, write_to_admin
 
 def shop(message):
 	def buy(message):
@@ -12,6 +12,7 @@ def shop(message):
 		with lock:
 			cursor1.execute("SELECT user_id FROM trade")
 			user_id = cursor1.fetchall()
+			write_to_admin()
 		user_id = list(set(user_id))
 		a=0
 		data = ""
@@ -21,12 +22,15 @@ def shop(message):
 			with lock:
 				cursor1.execute("SELECT product_name FROM trade WHERE user_id=?", (int(i),))
 				name = cursor1.fetchall()
+				write_to_admin()
 			with lock:
 				cursor1.execute("SELECT product_price FROM trade WHERE user_id=?", (int(i),))
 				price = cursor1.fetchall()
+				write_to_admin()
 			with lock:
 				cursor1.execute("SELECT product_date FROM trade WHERE user_id=?", (int(i),))
 				date = cursor1.fetchall()
+				write_to_admin()
 			for b in range(len(name)):
 				a+=1
 				name = name[b]
@@ -45,12 +49,14 @@ def shop(message):
 						with lock:
 							cursor1.execute("SELECT user_id FROM trade")
 							a = cursor1.fetchall()
+							write_to_admin()
 						a = int(len(a))
 						temp = int(message.text)
 						if temp <= a:
 							with lock:
 								cursor1.execute("SELECT user_id FROM trade")
 								user_id = cursor1.fetchall()
+								write_to_admin()
 							user_id = list(set(user_id))
 							a=0
 							for i in user_id:
@@ -59,12 +65,15 @@ def shop(message):
 								with lock:
 									cursor1.execute("SELECT product_name FROM trade WHERE user_id=?", (int(i),))
 									name = cursor1.fetchall()
+									write_to_admin()
 								with lock:
 									cursor1.execute("SELECT product_price FROM trade WHERE user_id=?", (int(i),))
 									price = cursor1.fetchall()
+									write_to_admin()
 								with lock:
 									cursor1.execute("SELECT product_date FROM trade WHERE user_id=?", (int(i),))
 									date = cursor1.fetchall()
+									write_to_admin()
 								a+=1
 								for b in range(len(name)):
 									if a == temp:
@@ -80,6 +89,7 @@ def shop(message):
 									with lock:
 										cursor.execute("SELECT ? FROM balance WHERE user_id=?", (config.get_need_card(fname), message.chat.id,))
 										tttemp = cursor.fetchone()
+										write_to_admin()
 									tttemp = str(tttemp)
 									if tttemp == "('default_card',)" or tttemp == "None":
 										tttemp = fname
@@ -90,6 +100,7 @@ def shop(message):
 									with lock:
 										cursor.execute("SELECT mph FROM balance WHERE user_id=?", (message.chat.id,))
 										temp1 = cursor.fetchone()
+										write_to_admin()
 									if temp1 == None or temp1 == (None,):
 										temp2 = tttemp.split(", ")
 										temp1 = config.get_mph(temp2)
@@ -101,62 +112,76 @@ def shop(message):
 									with lock:
 										cursor.execute("SELECT count FROM balance WHERE user_id=?", (message.chat.id,))
 										count = cursor.fetchone()
+										write_to_admin()
 									count = count[0]
 									count = count-fprice
 									with lock:
 										cursor1.execute("SELECT user_id FROM trade WHERE product_date = ? AND product_price = ? AND product_name = ?", (fdate, fprice, fname))
 										user_id = cursor1.fetchone()
+										write_to_admin()
 									user_id = user_id[0]
 									temp2 = config.get_need_card(fname)
 									with lock:
 										cursor1.execute("DELETE FROM trade WHERE product_date = ? AND product_price = ? AND product_name = ?", (fdate, fprice, fname,))
 										con1.commit()
+										write_to_admin()
 									with lock:
 										cursor.execute("UPDATE balance SET count=?  WHERE user_id=?", (count, message.chat.id))
 										con.commit()
+										write_to_admin()
 									with lock:
 										cursor.execute("UPDATE balance SET mph=?  WHERE user_id=?", (temp1, message.chat.id))
 										con.commit()
+										write_to_admin()
 									if temp2 == "default_card":
 										with lock:
 											cursor.execute("UPDATE balance SET default_card=?  WHERE user_id=?", (tttemp, message.chat.id))
 											con.commit()
+											write_to_admin()
 									elif temp2 == "different_card":
 										with lock:
 											cursor.execute("UPDATE balance SET different_card=?  WHERE user_id=?", (tttemp, message.chat.id))
 											con.commit()
+											write_to_admin()
 									elif temp2 == "rare_card":
 										with lock:
 											cursor.execute("UPDATE balance SET rare_card=?  WHERE user_id=?", (tttemp, message.chat.id))
 											con.commit()
+											write_to_admin()
 									elif temp2 == "epic_card":
 										with lock:
 											cursor.execute("UPDATE balance SET epic_card=?  WHERE user_id=?", (tttemp, message.chat.id))
 											con.commit()
+											write_to_admin()
 									elif temp2 == "legendary_card":
 										with lock:
 											cursor.execute("UPDATE balance SET legendary_card=?  WHERE user_id=?", (tttemp, message.chat.id))
 											con.commit()
+											write_to_admin()
 									bot.send_message(message.chat.id, "Покупка совершена")
 									with lock:
 										cursor.execute("SELECT count FROM balance WHERE user_id=?", (user_id,))
 										countt = cursor.fetchone()
+										write_to_admin()
 									countt = countt[0]
 									ttempp = round(fprice/10, 0)
 									countt = countt+fprice-ttempp
 									with lock:
 										cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (countt, user_id))
 										con.commit()
+										write_to_admin()
 									bot.send_message(user_id, "Ты успешно продал "+str(fname)+" за "+str(int(fprice-ttempp))+" кликов(клика). 10% комиссии забрано рынком.")
 									with lock:
 										cursor.execute("SELECT count FROM balance WHERE user_id=?", (5493548156,))
 										ccountt = cursor.fetchone()
+										write_to_admin()
 									ccountt = ccountt[0]
 									ttemppp = round(fprice/10, 0)
 									ccountt = ccountt+ttemppp
 									with lock:
 										cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (ccountt, 5493548156))
 										con.commit()
+										write_to_admin()
 								elif message.text == "Нет":
 									bot.send_message(message.chat.id, "Покупка прервана, возвращаю в список товаров")
 									buy(message)
@@ -193,9 +218,11 @@ def shop(message):
 					if message.text == "Да":
 						with lock:
 							cursor1.execute("INSERT INTO trade (user_id, product_name, product_price, product_date) VALUES (?, ?, ?, ?)", (message.chat.id, tovar, sell_count, date))
+							write_to_admin()
 						with lock:
 							cursor.execute("SELECT ? FROM balance WHERE user_id=?", (config.get_need_card(tovar), message.chat.id,))
 							temp52 = cursor.fetchone()
+							write_to_admin()
 						temp53 = config.get_need_card(tovar)
 						temp52 = str(temp52)
 						a = len(temp52)-3
@@ -206,22 +233,27 @@ def shop(message):
 								with lock:
 									cursor.execute("UPDATE balance SET default_card=?  WHERE user_id=?", (temp52, message.chat.id))
 									con.commit()
+									write_to_admin()
 							elif temp53 == "different_card":
 								with lock:
 									cursor.execute("UPDATE balance SET different_card=?  WHERE user_id=?", (temp52, message.chat.id))
 									con.commit()
+									write_to_admin()
 							elif temp53 == "rare_card":
 								with lock:
 									cursor.execute("UPDATE balance SET rare_card=?  WHERE user_id=?", (temp52, message.chat.id))
 									con.commit()
+									write_to_admin()
 							elif temp53 == "epic_card":
 								with lock:
 									cursor.execute("UPDATE balance SET epic_card=?  WHERE user_id=?", (temp52, message.chat.id))
 									con.commit()
+									write_to_admin()
 							elif temp53 == "legendary_card":
 								with lock:
 									cursor.execute("UPDATE balance SET legendary_card=?  WHERE user_id=?", (temp52, message.chat.id))
 									con.commit()
+									write_to_admin()
 							bot.send_message(message.chat.id, "Ты успешно поставил на продажу данную карту")
 						else:
 							bot.send_message(message.chat.id, "У тебя нету карт")
@@ -258,6 +290,7 @@ def shop(message):
 		with lock:
 			cursor.execute("SELECT default_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
+			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
 		if temp !=0:
@@ -269,6 +302,7 @@ def shop(message):
 		with lock:
 			cursor.execute("SELECT different_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
+			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
 		if temp !=0:
@@ -280,6 +314,7 @@ def shop(message):
 		with lock:
 			cursor.execute("SELECT rare_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
+			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
 		if temp !=0:
@@ -291,6 +326,7 @@ def shop(message):
 		with lock:
 			cursor.execute("SELECT epic_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
+			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
 		if temp !=0:
@@ -302,6 +338,7 @@ def shop(message):
 		with lock:
 			cursor.execute("SELECT legendary_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
+			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
 		if temp !=0:

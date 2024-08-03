@@ -3,7 +3,7 @@ from telebot import types
 import random
 import threading
 import config
-from create_bot import bot, cursor, lock, con
+from create_bot import bot, cursor, lock, con, write_to_admin
 import menu
 import generate_image as gen
 
@@ -17,10 +17,12 @@ def minigames(message):
 					with lock:
 						cursor.execute("SELECT wins1 FROM balance WHERE user_id=?", (message.chat.id,))
 						twins1 = cursor.fetchone()
+						write_to_admin()
 					if twins1 == None or twins1 == (None,):
 						twins1 = 1
 						with lock:
 							cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins11, wins2, wins13, wins14, wins15, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 1, 0, 0, 0, 0, False, False, False, 0, 0))
+							write_to_admin()
 						bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 						game1(message)
 					else:
@@ -34,9 +36,11 @@ def minigames(message):
 							with lock:
 								cursor.execute("UPDATE balance SET wins1=? WHERE user_id=?", (0, message.chat.id))
 								con.commit()
+								write_to_admin()
 							with lock:
 								cursor.execute("SELECT default_card FROM balance WHERE user_id=?", (message.chat.id,))
 								temp = cursor.fetchone()
+								write_to_admin()
 							temp = str(temp)
 							if temp == "('',)":
 								temp = rand_card
@@ -48,6 +52,7 @@ def minigames(message):
 							with lock:
 								cursor.execute("SELECT mph FROM balance WHERE user_id=?", (message.chat.id,))
 								temp1 = cursor.fetchone()
+								write_to_admin()
 							if temp1 == None or temp1 == (None,):
 								temp1 = config.get_mph(temp2)
 							else:
@@ -57,12 +62,14 @@ def minigames(message):
 							with lock:
 								cursor.execute("UPDATE balance SET default_card=?, mph=? WHERE user_id=?", (temp, temp1, message.chat.id))
 								con.commit()
+								write_to_admin()
 							game1(message)
 						else:
 							bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 							with lock:
 								cursor.execute("UPDATE balance SET wins1=? WHERE user_id=?", (twins1, message.chat.id))
 								con.commit()
+								write_to_admin()
 							game1(message)
 				else:
 					bot.send_message(message.chat.id, "Ты не угадал")
@@ -110,10 +117,12 @@ def minigames(message):
 						with lock:
 							cursor.execute("SELECT wins2 FROM balance WHERE user_id=?", (message.chat.id,))
 							twins1 = cursor.fetchone()
+							write_to_admin()
 						if twins1 == None or twins1 == (None,):
 							twins1 = 1
 							with lock:
 								cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins1, wins2, wins3, wins4, wins5, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 0, 1, 0, 0, 0, False, False, False, 0, 0))
+								write_to_admin()
 							bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 							game2(message)
 						else:
@@ -127,9 +136,11 @@ def minigames(message):
 								with lock:
 									cursor.execute("UPDATE balance SET wins2=? WHERE user_id=?", (0, message.chat.id))
 									con.commit()
+									write_to_admin()
 								with lock:
 									cursor.execute("SELECT different_card FROM balance WHERE user_id=?", (message.chat.id,))
 									temp = cursor.fetchone()
+									write_to_admin()
 								temp = str(temp)
 								if temp == "('',)":
 									temp = rand_card
@@ -141,6 +152,7 @@ def minigames(message):
 								with lock:
 									cursor.execute("SELECT mph FROM balance WHERE user_id=?", (message.chat.id,))
 									temp1 = cursor.fetchone()
+									write_to_admin()
 								if temp1 == None or temp1 == (None,):
 									temp1 = config.get_mph(temp2)
 								else:
@@ -150,12 +162,14 @@ def minigames(message):
 								with lock:
 									cursor.execute("UPDATE balance SET different_card=?, mph=? WHERE user_id=?", (temp, temp1, message.chat.id))
 									con.commit()
+									write_to_admin()
 								game2(message)
 							else:
 								bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 								with lock:
 									cursor.execute("UPDATE balance SET wins2=? WHERE user_id=?", (twins1, message.chat.id))
 									con.commit()
+									write_to_admin()
 								game2(message)
 					else:
 						bot.send_message(message.chat.id, "Ты не угадал")
@@ -179,10 +193,12 @@ def minigames(message):
 				with lock:
 					cursor.execute("SELECT wins3 FROM balance WHERE user_id=?", (message.chat.id,))
 					twins1 = cursor.fetchone()
+					write_to_admin()
 				if twins1 == None or twins1 == (None,):
 					twins1 = 1
 					with lock:
 						cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins1, wins2, wins3, wins4, wins5, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 0, 1, 0, 0, 0, False, False, False, 0, 0))
+						write_to_admin()
 					bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 					game3(message)
 				else:
@@ -196,9 +212,11 @@ def minigames(message):
 						with lock:
 							cursor.execute("UPDATE balance SET wins3=? WHERE user_id=?", (0, message.chat.id))
 							con.commit()
+							write_to_admin()
 						with lock:
 							cursor.execute("SELECT rare_card FROM balance WHERE user_id=?", (message.chat.id,))
 							temp = cursor.fetchone()
+							write_to_admin()
 						temp = str(temp)
 						if temp == "('',)":
 							temp = rand_card
@@ -210,6 +228,7 @@ def minigames(message):
 							with lock:
 								cursor.execute("SELECT mph FROM balance WHERE user_id=?", (message.chat.id,))
 								temp1 = cursor.fetchone()
+								write_to_admin()
 							if temp1 == None or temp1 == (None,):
 								temp1 = config.get_mph(temp2)
 							else:
@@ -219,12 +238,14 @@ def minigames(message):
 							with lock:
 								cursor.execute("UPDATE balance SET rare_card=?, mph=? WHERE user_id=?", (temp, temp1, message.chat.id))
 								con.commit()
+								write_to_admin()
 						game3(message)
 					else:
 						bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 						with lock:
 							cursor.execute("UPDATE balance SET wins3=? WHERE user_id=?", (twins1, message.chat.id))
 							con.commit()
+							write_to_admin()
 						game3(message)
 			elif message.text ==  "Вернуться в меню":
 				menu.menu(message)

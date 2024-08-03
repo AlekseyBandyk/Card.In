@@ -2,62 +2,73 @@ import telebot
 from telebot import types
 import threading
 from menu import menu
-from create_bot import bot, cursor, lock, con
+from create_bot import bot, cursor, lock, con, write_to_admin
 
-@bot.message_handler(commands=['quests'])
 def quest(message):
 	def check_quests(message):
 		if message.text == 'Проверить задания':
 			with lock:
 				cursor.execute("SELECT count FROM balance WHERE user_id=?", (message.chat.id,))
 				temp = cursor.fetchone()
+				write_to_admin()
 			temp = temp[0]
 			with lock:
 				cursor.execute("SELECT wins1 FROM balance WHERE user_id=?", (message.chat.id,))
 				temp_wins = cursor.fetchone()
+				write_to_admin()
 			temp_wins = temp_wins[0]
 			with lock:
 				cursor.execute("SELECT referrer FROM balance WHERE referrer=?", (message.chat.id,))
 				temp_ref = cursor.fetchall()
+				write_to_admin()
 			temp_ref = len(temp_ref)
 			with lock:
 				cursor.execute("SELECT quest1 FROM balance WHERE user_id=?", (message.chat.id,))
 				temp1 = cursor.fetchone()
+				write_to_admin()
 			temp1 = temp1[0]
 			with lock:
 				cursor.execute("SELECT quest2 FROM balance WHERE user_id=?", (message.chat.id,))
 				temp2 = cursor.fetchone()
+				write_to_admin()
 			temp2 = temp2[0]
 			with lock:
 				cursor.execute("SELECT quest3 FROM balance WHERE user_id=?", (message.chat.id,))
 				temp3 = cursor.fetchone()
+				write_to_admin()
 			temp3 = temp3[0]
 			if temp >= 500 and temp1 == 0:
 				temp+=500
 				with lock:
 					cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (temp, message.chat.id))
 					con.commit()
+					write_to_admin()
 				with lock:
 					cursor.execute("UPDATE balance SET quest1=? WHERE user_id=?", (1, message.chat.id))
 					con.commit()
+					write_to_admin()
 				bot.send_message(message.chat.id, "Поздравляю ты выполнил задание 2 и получил 500 кликов. Твоих кликов: "+str(temp))
 			elif temp_wins >= 3 and temp2 == 0:
 				temp+=300
 				with lock:
 					cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (temp, message.chat.id))
 					con.commit()
+					write_to_admin()
 				with lock:
 					cursor.execute("UPDATE balance SET quest2=? WHERE user_id=?", (1, message.chat.id))
 					con.commit()
+					write_to_admin()
 				bot.send_message(message.chat.id, "Поздравляю ты выполнил задание 3 и получил 300 кликов. Твоих кликов: "+str(temp))
 			elif temp_ref >= 1 and temp3 == 0:
 				temp+=3000
 				with lock:
 					cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (temp, message.chat.id))
 					con.commit()
+					write_to_admin()
 				with lock:
 					cursor.execute("UPDATE balance SET quest3=? WHERE user_id=?", (1, message.chat.id))
 					con.commit()
+					write_to_admin()
 				bot.send_message(message.chat.id, "Поздравляю ты выполнил задание 4 и получил 3000 кликов. Твоих кликов: "+str(temp))
 			elif temp1 == 1 and temp2 == 1 and temp3 == 1:
 				bot.send_message(message.chat.id, "Ты уже выполнил все задания")

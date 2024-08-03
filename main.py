@@ -1,6 +1,6 @@
 from create_bot import bot, cursor, cursor1, lock
 import psutil
-import menu, handle, click, trade, start, quests, profile, minigames, config, bank
+import menu, handle, click, trade, start, quests, profile, minigames, config, bank, admin
 
 @bot.message_handler(commands=['help'])
 def help(message):
@@ -57,6 +57,7 @@ quests.register_handlers(bot)
 minigames.register_handlers(bot)
 profile.register_handlers(bot)
 bank.register_handlers(bot)
+admin.register_handlers(bot)
 handle.register_handlers(bot)
 
 def polling_bot(i):
@@ -64,7 +65,7 @@ def polling_bot(i):
 		bot.polling(none_stop=True)
 	except Exception as e:
 		i+=1
-		bot.send_message(5493548156, "Bot has been stoped with error: "+e+", but he been restarted. Restart №"+str(i))
+		bot.send_message(5493548156, "Bot has been stoped with error: "+str(e)+", but he been restarted. Restart №"+str(i))
 		polling_bot(i)
 
 if __name__ == '__main__':

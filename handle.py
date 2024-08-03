@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import time
 import threading
-from create_bot import bot, cursor, cursor1, lock, clicks_for_all, con
+from create_bot import bot, cursor, cursor1, lock, clicks_for_all, con, write_to_admin
 
 import click
 import config
@@ -20,17 +20,21 @@ def handle(message):
 		with lock:
 			cursor.execute("SELECT user_id FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchone()
+			write_to_admin()
 		if temp == None:
 			with lock:
 				cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins1, wins2, wins3, wins4, wins5, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, 0, 0, 0, 0, 0, 0, False, False, False, 0, 0))
+				write_to_admin()
 		with lock:
 			cursor.execute("SELECT count FROM balance WHERE user_id=?", (message.chat.id,))
 			count = cursor.fetchone()
+			write_to_admin()
 		count = count[0]
 		count+=1
 		with lock:
 			cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (count, message.chat.id))
 			con.commit()
+			write_to_admin()
 		global clicks_for_all
 		clicks_for_all+=1
 		bot.reply_to(message, '+1 клик \n Твоих кликов: '+str(count)+'\n Общих кликов: '+str(clicks_for_all))
@@ -54,6 +58,7 @@ def handle(message):
 		with lock:
 			cursor.execute("SELECT referrer FROM balance WHERE referrer=?", (message.chat.id,))
 			referrers = cursor.fetchone()
+			write_to_admin()
 		if referrers == None:
 			referrers = 0
 		else:
@@ -84,6 +89,7 @@ def handle(message):
 			with lock:
 				cursor.execute("SELECT start_time FROM balance WHERE user_id=?", (message.chat.id,))
 				start_time = cursor.fetchone()
+				write_to_admin()
 			start_time = start_time[0]
 			if message.text == "Начать заработок":
 				if start_time == None or start_time == 0:
@@ -91,6 +97,7 @@ def handle(message):
 					with lock:
 						cursor.execute("UPDATE balance SET start_time=? WHERE user_id=?", (start_time, message.chat.id))
 						con.commit()
+						write_to_admin()
 					bot.send_message(message.chat.id, "Ты начал заработок денег")
 				elif start_time != None or start_time != 0:
 					bot.send_message(message.chat.id, "Ты уже начал заработок денег, ожидай")
@@ -105,6 +112,7 @@ def handle(message):
 					with lock:
 						cursor.execute("SELECT mph FROM balance WHERE user_id=?", (message.chat.id,))
 						mph = cursor.fetchone()
+						write_to_admin()
 					mph = mph[0]
 					if temp < 3 and temp > 0:
 						if mph > 0:
@@ -114,14 +122,17 @@ def handle(message):
 							with lock:
 								cursor.execute("SELECT count FROM balance WHERE user_id=?", (message.chat.id,))
 								count = cursor.fetchone()
+								write_to_admin()
 							count = count[0]
 							count = count+temp1
 							with lock:
 								cursor.execute("UPDATE balance SET start_time=? WHERE user_id=?", (start_time, message.chat.id))
 								con.commit()
+								write_to_admin()
 							with lock:
 								cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (count, message.chat.id))
 								con.commit()
+								write_to_admin()
 							bot.send_message(message.chat.id, "Ты закончил заработок и получил "+str(int(temp1))+" кликов")
 						else:
 							bot.send_message(message.chat.id, "Ты закончил заработок и получил 0 кликов")
@@ -137,6 +148,7 @@ def handle(message):
 		with lock:
 			cursor.execute("SELECT mph FROM balance WHERE user_id=?", (message.chat.id,))
 			mph = cursor.fetchone()
+			write_to_admin()
 		mph = mph[0]
 
 		send = bot.send_message(message.chat.id, "Твой доход в час: "+str(mph)+"\nЖелаешь начать зарабатывать? Помни, доход идёт только 3 часа", reply_markup=mph_keyboard)

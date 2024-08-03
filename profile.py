@@ -2,23 +2,26 @@ import telebot
 from telebot import types
 import generate_image as gen
 import threading
-from create_bot import bot, cursor, cursor1, lock
+from create_bot import bot, cursor, cursor1, lock, write_to_admin
 
-@bot.message_handler(commands=['profile'])
 def profile(message):
 	with lock:
 		cursor.execute("SELECT user_id FROM balance WHERE user_id=?", (message.chat.id,))
 		temp = cursor.fetchone()
+		write_to_admin()
 	if temp == None:
 		with lock:
 			cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 0, False, False, False, 0, 0))
+			write_to_admin()
 	with lock:
 		cursor.execute("SELECT count FROM balance WHERE user_id=?", (message.chat.id,))
 		count = cursor.fetchone()
+		write_to_admin()
 	count = count[0]
 	with lock:
 		cursor.execute("SELECT referrer FROM balance WHERE referrer=?", (message.chat.id,))
 		referrers = cursor.fetchall()
+		write_to_admin()
 	if referrers == None:
 		referrers = 0
 	else:
@@ -26,30 +29,35 @@ def profile(message):
 	with lock:
 		cursor.execute("SELECT default_card FROM balance WHERE user_id=?", (message.chat.id,))
 		temp1 = cursor.fetchone()
+		write_to_admin()
 	temp1 = str(temp1)
 	a = len(temp1)-3
 	temp1 = temp1[2:a]
 	with lock:
 		cursor.execute("SELECT different_card FROM balance WHERE user_id=?", (message.chat.id,))
 		temp2 = cursor.fetchone()
+		write_to_admin()
 	temp2 = str(temp2)
 	a = len(temp2)-3
 	temp2 = temp2[2:a]
 	with lock:
 		cursor.execute("SELECT rare_card FROM balance WHERE user_id=?", (message.chat.id,))
 		temp3 = cursor.fetchone()
+		write_to_admin()
 	temp3 = str(temp3)
 	a = len(temp3)-3
 	temp3 = temp3[2:a]
 	with lock:
 		cursor.execute("SELECT epic_card FROM balance WHERE user_id=?", (message.chat.id,))
 		temp4 = cursor.fetchone()
+		write_to_admin()
 	temp4 = str(temp4)
 	a = len(temp4)-3
 	temp4 = temp4[2:a]
 	with lock:
 		cursor.execute("SELECT legendary_card FROM balance WHERE user_id=?", (message.chat.id,))
 		temp5 = cursor.fetchone()
+		write_to_admin()
 	temp5 = str(temp5)
 	a = len(temp5)-3
 	temp5 = temp5[2:a]
