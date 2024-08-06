@@ -22,9 +22,20 @@ def start(message):
 				write_to_admin()
 			if temp == None:
 				with lock:
-					cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins, quest1, quest2, quest3, start_time, mph, referrer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 0, False, False, False, 0, 0, referrer_candidate))
+					cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins, quest1, quest2, quest3, start_time, mph, referrer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 100, "", "", "", "", "", 0, False, False, False, 0, 0, referrer_candidate))
 					write_to_admin()
 				bot.send_message(message.chat.id, 'Привет, ты попал на Card.In.\nПохоже, ты пришёл от '+bot.get_chat_member(referrer_candidate, referrer_candidate).user.username+'.\nРегистрирую тебя')
+			bot.send_message(referrer_candidate, "Ты пригласил "+message.from_user.first_name+"! Начисляю 1000 кликов")
+			with lock:
+				cursor.execute("SELECT count FROM balance WHERE user_id=?", (referrer_candidate,))
+				count = cursor.fetchone()
+				write_to_admin()
+			count = count[0]
+			count+=1000
+			with lock:
+				cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (count, referrer_candidate,))
+				con.commit()
+				write_to_admin()
 		except ValueError:
 			pass
 
@@ -34,7 +45,7 @@ def start(message):
 	else:
 		bot.send_message(message.chat.id, 'Привет, ты попал на Card.In.\nПохоже, ты никем не приглашён.\nРегистрирую тебя')
 		with lock:
-			cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 0, False, False, False, 0, 0))
+			cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 100, "", "", "", "", "", 0, False, False, False, 0, 0))
 			write_to_admin()
 
 	time.sleep(1)

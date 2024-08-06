@@ -115,73 +115,77 @@ def shop(message):
 										write_to_admin()
 									count = count[0]
 									count = count-fprice
-									with lock:
-										cursor1.execute("SELECT user_id FROM trade WHERE product_date = ? AND product_price = ? AND product_name = ?", (fdate, fprice, fname))
-										user_id = cursor1.fetchone()
-										write_to_admin()
-									user_id = user_id[0]
-									temp2 = config.get_need_card(fname)
-									with lock:
-										cursor1.execute("DELETE FROM trade WHERE product_date = ? AND product_price = ? AND product_name = ?", (fdate, fprice, fname,))
-										con1.commit()
-										write_to_admin()
-									with lock:
-										cursor.execute("UPDATE balance SET count=?  WHERE user_id=?", (count, message.chat.id))
-										con.commit()
-										write_to_admin()
-									with lock:
-										cursor.execute("UPDATE balance SET mph=?  WHERE user_id=?", (temp1, message.chat.id))
-										con.commit()
-										write_to_admin()
-									if temp2 == "default_card":
+									if count < 0:
+										bot.send_message(message.chat.id, "Ошибка! У тебя недостаточно средств для покупки этой карточки!")
+										menu(message)
+									else:
 										with lock:
-											cursor.execute("UPDATE balance SET default_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+											cursor1.execute("SELECT user_id FROM trade WHERE product_date = ? AND product_price = ? AND product_name = ?", (fdate, fprice, fname))
+											user_id = cursor1.fetchone()
+											write_to_admin()
+										user_id = user_id[0]
+										temp2 = config.get_need_card(fname)
+										with lock:
+											cursor1.execute("DELETE FROM trade WHERE product_date = ? AND product_price = ? AND product_name = ?", (fdate, fprice, fname,))
+											con1.commit()
+											write_to_admin()
+										with lock:
+											cursor.execute("UPDATE balance SET count=?  WHERE user_id=?", (count, message.chat.id))
 											con.commit()
 											write_to_admin()
-									elif temp2 == "different_card":
 										with lock:
-											cursor.execute("UPDATE balance SET different_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+											cursor.execute("UPDATE balance SET mph=?  WHERE user_id=?", (temp1, message.chat.id))
 											con.commit()
 											write_to_admin()
-									elif temp2 == "rare_card":
+										if temp2 == "default_card":
+											with lock:
+												cursor.execute("UPDATE balance SET default_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+												con.commit()
+												write_to_admin()
+										elif temp2 == "different_card":
+											with lock:
+												cursor.execute("UPDATE balance SET different_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+												con.commit()
+												write_to_admin()
+										elif temp2 == "rare_card":
+											with lock:
+												cursor.execute("UPDATE balance SET rare_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+												con.commit()
+												write_to_admin()
+										elif temp2 == "epic_card":
+											with lock:
+												cursor.execute("UPDATE balance SET epic_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+												con.commit()
+												write_to_admin()
+										elif temp2 == "legendary_card":
+											with lock:
+												cursor.execute("UPDATE balance SET legendary_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+												con.commit()
+												write_to_admin()
+										bot.send_message(message.chat.id, "Покупка совершена")
 										with lock:
-											cursor.execute("UPDATE balance SET rare_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+											cursor.execute("SELECT count FROM balance WHERE user_id=?", (user_id,))
+											countt = cursor.fetchone()
+											write_to_admin()
+										countt = countt[0]
+										ttempp = round(fprice/10, 0)
+										countt = countt+fprice-ttempp
+										with lock:
+											cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (countt, user_id))
 											con.commit()
 											write_to_admin()
-									elif temp2 == "epic_card":
+										bot.send_message(user_id, "Ты успешно продал "+str(fname)+" за "+str(int(fprice-ttempp))+" кликов(клика). 10% комиссии забрано рынком.")
 										with lock:
-											cursor.execute("UPDATE balance SET epic_card=?  WHERE user_id=?", (tttemp, message.chat.id))
+											cursor.execute("SELECT count FROM balance WHERE user_id=?", (5493548156,))
+											ccountt = cursor.fetchone()
+											write_to_admin()
+										ccountt = ccountt[0]
+										ttemppp = round(fprice/10, 0)
+										ccountt = ccountt+ttemppp
+										with lock:
+											cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (ccountt, 5493548156))
 											con.commit()
 											write_to_admin()
-									elif temp2 == "legendary_card":
-										with lock:
-											cursor.execute("UPDATE balance SET legendary_card=?  WHERE user_id=?", (tttemp, message.chat.id))
-											con.commit()
-											write_to_admin()
-									bot.send_message(message.chat.id, "Покупка совершена")
-									with lock:
-										cursor.execute("SELECT count FROM balance WHERE user_id=?", (user_id,))
-										countt = cursor.fetchone()
-										write_to_admin()
-									countt = countt[0]
-									ttempp = round(fprice/10, 0)
-									countt = countt+fprice-ttempp
-									with lock:
-										cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (countt, user_id))
-										con.commit()
-										write_to_admin()
-									bot.send_message(user_id, "Ты успешно продал "+str(fname)+" за "+str(int(fprice-ttempp))+" кликов(клика). 10% комиссии забрано рынком.")
-									with lock:
-										cursor.execute("SELECT count FROM balance WHERE user_id=?", (5493548156,))
-										ccountt = cursor.fetchone()
-										write_to_admin()
-									ccountt = ccountt[0]
-									ttemppp = round(fprice/10, 0)
-									ccountt = ccountt+ttemppp
-									with lock:
-										cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (ccountt, 5493548156))
-										con.commit()
-										write_to_admin()
 								elif message.text == "Нет":
 									bot.send_message(message.chat.id, "Покупка прервана, возвращаю в список товаров")
 									buy(message)

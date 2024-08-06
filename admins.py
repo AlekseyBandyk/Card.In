@@ -21,12 +21,15 @@ def remove_clicks(user_id, clicks, reason, message):
 		write_to_admin()
 	count = count[0]
 	count-=clicks
-	with lock:
-		cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (count, user_id,))
-		con.commit()
-		write_to_admin()
-	bot.send_message(message.chat.id, "Перевод был выполнен успешно!")
-	bot.send_message(user_id, "У тебя было удалено "+str(clicks)+" кликов! Причина: "+reason+".\nТвой баланс: "+str(count)+" кликов")
+	if count < 0:
+		bot.send_message(message.chat.id, "Ошибка! У человека недостаточно кликов для удаления!")
+	else:
+		with lock:
+			cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (count, user_id,))
+			con.commit()
+			write_to_admin()
+		bot.send_message(message.chat.id, "Перевод был выполнен успешно!")
+		bot.send_message(user_id, "У тебя было удалено "+str(clicks)+" кликов! Причина: "+reason+".\nТвой баланс: "+str(count)+" кликов")
 
 
 def set_clicks(user_id, clicks, reason, message):
