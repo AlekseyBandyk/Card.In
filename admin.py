@@ -102,7 +102,7 @@ def admin(message):
 		else:
 			data = "Всего пользователей в базе данных: "+str(len_users)+"\n\nИмена пользователей:\n"
 			for i in users:
-				data+=str(i[0])+" : @"+bot.get_chat_member(i, i).user.username+" : "+bot.get_chat_member(i, i).user.first_name+"\n"
+				data+=str(i[0])+" : @"+str(bot.get_chat_member(i, i).user.username)+" : "+str(bot.get_chat_member(i, i).user.first_name)+"\n"
 			bot.send_message(message.chat.id, data)
 		executs=0
 		date = datetime.datetime.now()

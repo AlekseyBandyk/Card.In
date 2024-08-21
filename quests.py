@@ -40,11 +40,11 @@ def quest(message):
 			if temp >= 500 and temp1 == 0:
 				temp+=500
 				with lock:
-					cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (temp, message.chat.id))
+					cursor.execute("UPDATE balance SET count=? WHERE user_id=?", (temp, message.chat.id,))
 					con.commit()
 					write_to_admin()
 				with lock:
-					cursor.execute("UPDATE balance SET quest1=? WHERE user_id=?", (1, message.chat.id))
+					cursor.execute("UPDATE balance SET quest1=? WHERE user_id=?", (True, message.chat.id,))
 					con.commit()
 					write_to_admin()
 				bot.send_message(message.chat.id, "Поздравляю ты выполнил задание 2 и получил 500 кликов. Твоих кликов: "+str(temp))

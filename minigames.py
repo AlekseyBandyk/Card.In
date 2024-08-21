@@ -21,7 +21,7 @@ def minigames(message):
 					if twins1 == None or twins1 == (None,):
 						twins1 = 1
 						with lock:
-							cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins11, wins2, wins13, wins14, wins15, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 1, 0, 0, 0, 0, False, False, False, 0, 0))
+							cursor.execute("INSERT INTO balance (user_id, count, default_card, different_card, rare_card, epic_card, legendary_card, wins1, wins2, wins3, wins4, wins5, quest1, quest2, quest3, start_time, mph) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (message.chat.id, 1, "", "", "", "", "", 1, 0, 0, 0, 0, False, False, False, 0, 0))
 							write_to_admin()
 						bot.send_message(message.chat.id, "Ты угадал, твоих побед: "+str(twins1))
 						game1(message)
