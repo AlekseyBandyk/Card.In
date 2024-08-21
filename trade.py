@@ -297,65 +297,65 @@ def shop(message):
 			write_to_admin()
 		temp = temp[0]
 		temp=temp[0]
-		print(str(temp))
 		if temp !=0:
 			temp = "9"+temp
 			temp = temp[1:]
 			temp = temp.split(", ")
 			for i in temp:
-				choice_card_sell.add(types.KeyboardButton(i))
+				if i != "default_card":
+					choice_card_sell.add(types.KeyboardButton(i))
 		with lock:
 			cursor.execute("SELECT different_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
 			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
-		print(str(temp))
 		if temp !=0:
 			temp = "9"+temp
 			temp = temp[1:]
 			temp = temp.split(", ")
 			for i in temp:
-				choice_card_sell.add(types.KeyboardButton(i))
+				if i != "different_card":
+					choice_card_sell.add(types.KeyboardButton(i))
 		with lock:
 			cursor.execute("SELECT rare_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
 			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
-		print(str(temp))
 		if temp !=0:
 			temp = "9"+temp
 			temp = temp[1:]
 			temp = temp.split(", ")
 			for i in temp:
-				choice_card_sell.add(types.KeyboardButton(i))
+				if i != "rare_card":
+					choice_card_sell.add(types.KeyboardButton(i))
 		with lock:
 			cursor.execute("SELECT epic_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
 			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
-		print(str(temp))
 		if temp !=0:
 			temp = "9"+temp
 			temp = temp[1:]
 			temp = temp.split(", ")
 			for i in temp:
-				choice_card_sell.add(types.KeyboardButton(i))
+				if i != "epic_card":
+					choice_card_sell.add(types.KeyboardButton(i))
 		with lock:
 			cursor.execute("SELECT legendary_card FROM balance WHERE user_id=?", (message.chat.id,))
 			temp = cursor.fetchall()
 			write_to_admin()
 		temp = temp[0]
 		temp = temp[0]
-		print(str(temp))
 		if temp !=0:
 			temp = "9"+temp
 			temp = temp[1:]
 			temp = temp.split(", ")
 			for i in temp:
-				choice_card_sell.add(types.KeyboardButton(i))
+				if i != "legendary_card":
+					choice_card_sell.add(types.KeyboardButton(i))
 		choice_card_sell.add(types.KeyboardButton("Отменить"))
 		send = bot.send_message(message.chat.id, "Выбери карточку для продажи", reply_markup=choice_card_sell)
 		bot.register_next_step_handler(send, money_choice_sell)

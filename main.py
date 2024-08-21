@@ -61,9 +61,9 @@ admin.register_handlers(bot)
 handle.register_handlers(bot)
 
 def polling_bot(i):
-	try:
+	if 2>1:
 		bot.polling(none_stop=True)
-	except Exception as e:
+	else:
 		i+=1
 		bot.send_message(5493548156, "Bot has been stoped with error: "+str(e)+", but he been restarted. Restart №"+str(i))
 		polling_bot(i)
