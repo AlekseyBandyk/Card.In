@@ -296,7 +296,6 @@ def shop(message):
 			temp = cursor.fetchall()
 			write_to_admin()
 		temp = temp[0]
-		temp = temp[0]
 		print(str(temp))
 		if temp !=0:
 			temp = "9"+temp
