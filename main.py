@@ -1,5 +1,6 @@
 from create_bot import bot, cursor, cursor1, lock
 import psutil
+import buses
 import menu, handle, click, trade, start, quests, profile, minigames, config, bank, admin
 
 @bot.message_handler(commands=['help'])
@@ -27,10 +28,6 @@ def serv_info(message):
 def authors(message):
 	bot.send_message(message.chat.id, "Авторы CardIn:\n\nКодер/Лидер: <strong>Aleksey 14 02</strong>\nДизайнер/Тестировщик: <strong>ростик(<a href='https://t.me/krsvkdsgnr'>@krsvkdsgnr</a>)</strong>\nГенератор идей/Тестировщик: <strong>Павлик Си́нклев(<a href='https://t.me/Snxly'>@Snxly</a>)</strong>", parse_mode="HTML")
 
-@bot.message_handler(commands=['temp'])
-def temp(message):
-	bot.send_message(message.chat.id, "Тут ничего нет")
-
 @bot.callback_query_handler(func=lambda call: call.data.startswith("reply:"))
 def handle_reply_button(call):
 	def send_reply(message, user_id):
@@ -48,6 +45,16 @@ def handle_reply_button(call):
 	except Exception as e:
 		bot.send_message(config.owner, f"Произошла ошибка: {e}")
 
+@bot.message_handler(commands=['bus'])
+def bus(message):
+	if message.chat.id == 5493548156:
+		def stop_choice(message):
+			if message.text == "Лопатина 4":
+				bot.send_message(mesage.chat.id, buses.lopatina_4())
+
+		bus_keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+		bus_keyboard.add(types.KeyboardButton("Лопатина 4"))
+		send = bot.send_message(message.chat.id, "Выберите остановку", reply_markup=bus_keyboard)
 
 menu.register_handlers(bot)
 click.register_handlers(bot)
